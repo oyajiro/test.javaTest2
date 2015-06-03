@@ -12,7 +12,7 @@
 <h:body>
 	<h1>Books library</h1>
 	<h:form id="booksListForm">
-		<p:dataTable value="#{bookController.books}" var="book" type="ordered"
+		<p:dataTable value="#{bookController.approved}" var="book" type="ordered"
 			id="booksList">
 			<p:column headerText="Name">
                 #{book.name}
@@ -36,8 +36,8 @@
 		<p:dialog header="Create book" widgetVar="bookdlg" resizable="false"
 			id="addbook">
 			<h:panelGrid columns="2" cellpadding="5">
-				<h:outputLabel for="name" value="Book name: " />
-				<p:inputText value="#{bookController.book.name}"></p:inputText>
+				<h:outputLabel for="bookName" value="Book name: " />
+				<p:inputText value="#{bookController.book.name}" id="bookName"></p:inputText>
 				<f:facet name="footer">
 					<p:commandButton value="Add book" action="#{bookController.add}" />
 				</f:facet>
@@ -98,7 +98,8 @@
 			<h:outputText value="#{userController.user.fio}" />
 		</h3>
 		<h:link value="Management page" outcome="admin/index"
-			rendered="#{userController.getRole() == 'admin'}" />
+			rendered="#{userController.getRole() == 'admin'}" /><br />
+	    <h:link value="Own books" outcome="books-list" />
 		<h:form>
 			<h:commandButton id="logout" value="Logout"
 				action="#{userController.logout}" />

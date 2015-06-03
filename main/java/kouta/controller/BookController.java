@@ -32,6 +32,7 @@ public class BookController implements Serializable {
     private HashMap<Integer, String> statuses;
     @ManagedProperty(value="#{userController}")
     private UserController userController;
+    private Book book = new Book();
 
     public BookController() {
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext
@@ -40,12 +41,18 @@ public class BookController implements Serializable {
 
         HashMap<Integer, String> statuses = new HashMap<Integer, String>();
         statuses.put(0, "new");
-        statuses.put(1, "publish");
+        statuses.put(1, "approve");
         statuses.put(1, "decline");
         this.statuses = statuses;
     }
-
-    private Book book = new Book();
+    
+    public String getStatus() {
+        return this.statuses.get(book.getStatus());
+    }
+    
+    public String getStatus(Integer status) {
+        return this.statuses.get(status);
+    }
 
     public BookService getbookService() {
         return bookService;
@@ -82,6 +89,18 @@ public class BookController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
         return "index?faces-redirect=true";
     }
+    
+    public void approve(Integer bookId) {
+        bookService.changeStatus(bookId, 1);
+    }
+    
+    public void decline(Integer bookId) {
+        bookService.changeStatus(bookId, 2);
+    }
+    
+    public void retry(Integer bookId) {
+        bookService.changeStatus(bookId, 0);
+    }
 
     public UserController getUserController() {
         return userController;
@@ -91,8 +110,16 @@ public class BookController implements Serializable {
         this.userController = userController;
     }
 
-    public List<Book> getBooks() {
-        return bookService.getAll();
+    public List<Book> getMyBooks() {
+        return bookService.getAll(userController.getUser().getId());
+    }
+    
+    public List<Book> getWaiting() {
+        return bookService.getListByStatus(0);
+    }
+    
+    public List<Book> getApproved() {
+        return bookService.getListByStatus(1);
     }
 
     public void delete(Book book) {

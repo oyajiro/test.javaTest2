@@ -28,7 +28,7 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Column
+    @Column(unique=true)
     private String name;
 
     @Column

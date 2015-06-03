@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+    <h3>My books</h3>
+    <h:link value="Return" outcome="index" />
+    <h:form id="booksListForm">
+        <p:dataTable value="#{bookController.myBooks}" var="book" type="ordered" id="booksList">
+            <p:column headerText="Name">
+                #{book.name}
+            </p:column>
+            <p:column headerText="User">
+                #{book.user.fio}
+            </p:column>
+            <p:column headerText="Status">
+                #{bookController.getStatus(book.status)}
+            </p:column>
+            <p:column headerText="Retry">
+                <h:commandButton outcome="index" value="Retry" action="#{bookController.retry(book.id)}" update="booksList" rendered="#{book.status == 2}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+</html>

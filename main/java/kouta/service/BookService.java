@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +34,30 @@ public class BookService {
     	return this.em.find(Book.class, id);
     }
     
-    public List<Book> getAll() {
-    	return this.em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+    public List<Book> getAll(Integer userId) {
+        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.user.id = ?1", Book.class);
+    	query.setParameter(1, userId);
+        return query.getResultList();
+    }
+    
+    public List<Book> getListByStatus(Integer status) {
+        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.status = ?1", Book.class);
+        query.setParameter(1, status);
+        return query.getResultList();
     }
     
     @Transactional
     public void remove(Book book) {
         Book loadBook = this.em.find(Book.class, book.getId());
         em.remove(loadBook);
+    }
+    
+    @Transactional
+    public void changeStatus(Integer bookId, Integer newStatus) {
+        Book book = em.find(Book.class, bookId);
+        if (book != null) {
+            book.setStatus(newStatus);
+            em.merge(book);
+        }
     }
 }

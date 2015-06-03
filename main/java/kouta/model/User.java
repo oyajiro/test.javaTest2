@@ -28,7 +28,7 @@ public class User implements Serializable {
 	@GeneratedValue
 	private int id;
 	
-	@Column
+	@Column(unique=true)
 	private String login;
 	
 	@Column

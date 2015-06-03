@@ -10,22 +10,16 @@
 <h:head>
 </h:head>
 <h:body>
-    <h1>Users management</h1>
-    <p:outputPanel rendered="#{userController.loggedIn}" id="greetings">
-       <h3>Greetings, <h:outputText value="#{userController.user.fio}"/></h3>
-    </p:outputPanel>
+    <h3>Users management</h3>
     <h:form id="usersListForm">
         <p:dataTable value="#{userController.users}" var="user" type="ordered" id="usersList">
             <p:column headerText="Login">
-                <f:facet name="header">Login</f:facet>
                 #{user.login}
             </p:column>
             <p:column headerText="Name">
-                <f:facet name="header">Name</f:facet>
                 #{user.fio}
             </p:column>
             <p:column headerText="Role">
-                <f:facet name="header">Role</f:facet>
                 #{userController.getRoles().get(user.role)}
             </p:column>
             <p:column headerText="Actions">
@@ -37,5 +31,21 @@
         </p:dataTable>
     </h:form>
     <p:button outcome="save" value="Add"></p:button>
+    <br />
+    <h3>Books for approve</h3>
+    <h:form id="booksListForm">
+        <p:dataTable value="#{bookController.waiting}" var="book" type="ordered" id="booksList">
+            <p:column headerText="Name">
+                #{book.name}
+            </p:column>
+            <p:column headerText="User">
+                #{book.user.fio}
+            </p:column>
+            <p:column headerText="Actions">
+                <h:commandButton outcome="index" value="Approve" action="#{bookController.approve(book.id)}" update="booksList"/>
+                <h:commandButton outcome="index" value="Decline" action="#{bookController.decline(book.id)}" update="booksList"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
 </h:body>
 </html>
