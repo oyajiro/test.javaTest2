@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+    <h1>Users management</h1>
+    <p:outputPanel rendered="#{userController.loggedIn}" id="greetings">
+       <h3>Greetings, <h:outputText value="#{userController.user.fio}"/></h3>
+    </p:outputPanel>
+    <h:form id="usersListForm">
+        <p:dataTable value="#{userController.users}" var="user" type="ordered" id="usersList">
+            <p:column headerText="Login">
+                <f:facet name="header">Login</f:facet>
+                #{user.login}
+            </p:column>
+            <p:column headerText="Name">
+                <f:facet name="header">Name</f:facet>
+                #{user.fio}
+            </p:column>
+            <p:column headerText="Role">
+                <f:facet name="header">Role</f:facet>
+                #{userController.getRoles().get(user.role)}
+            </p:column>
+            <p:column headerText="Actions">
+                <h:button outcome="save" value="Update">
+                    <f:param name="userId" value="#{user.id}" />
+                </h:button>
+                <h:commandButton outcome="index" value="Delete" action="#{userController.delete(user)}"></h:commandButton>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+    <p:button outcome="save" value="Add"></p:button>
+</h:body>
+</html>

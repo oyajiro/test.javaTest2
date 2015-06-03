@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+    <h1>Save user</h1>
+    <h:link value="Management page" outcome="index" />
+    <h:form>
+        <p:growl id="messages"></p:growl>
+        <p:panelGrid columns="2">
+            <h:outputLabel for="login" value="User login: " />
+            <p:inputText value="#{userController.managedUser.login}" id="login"></p:inputText>
+            
+            <h:outputLabel for="password" value="User password: " />
+            <p:password value="#{userController.managedUser.newPassword}" id="password"></p:password>
+            
+            <h:outputLabel for="fio" value="User fio: " />
+            <p:inputText value="#{userController.managedUser.fio}" id="fio"></p:inputText>
+            
+            <p:outputLabel for="role" value="User role: " />
+            <p:selectOneMenu id="role" value="#{userController.managedUser.role}" style="width:150px">
+                <f:selectItems value="#{userController.getRoles().entrySet()}" var="entry" 
+                    itemValue="#{entry.key}" itemLabel="#{entry.value}" />
+            </p:selectOneMenu>
+        </p:panelGrid>
+        <p:commandButton value="Save" action="#{userController.save}" update="messages"></p:commandButton>
+        
+    </h:form>
+</h:body>
+</html>

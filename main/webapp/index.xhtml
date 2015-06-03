@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+    <h1>Books library</h1>
+    <h:form id="booksListForm">
+	    <p:dataList value="#{bookController.books}" var="book" type="ordered" id="booksList">
+	        <h:column>
+	            <f:facet name="header">Name</f:facet>
+	            #{book.name}
+	        </h:column>
+	        <h:column rendered="#{userController.getRole() == 'admin'}">
+	            <f:facet name="header">Delete</f:facet>
+	            <h:commandLink value="Delete" action="#{bookController.delete(book)}" />
+	        </h:column>
+	    </p:dataList>
+	</h:form>
+    <h:form>
+	    <p:growl id="messages"></p:growl>
+	    <p:panelGrid columns="2">
+	        ENTER name
+	        <p:inputText value="#{bookController.book.name}"></p:inputText>
+	    </p:panelGrid>
+	    <p:commandButton value="Add book" action="#{bookController.add}" update="messages,:booksListForm:booksList,:greetings"></p:commandButton>
+	    
+	</h:form>
+	<p:outputPanel rendered="#{not userController.loggedIn}">
+		<h:form>           
+		    <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="login">
+		        <p:graphicImage name="images/log_in.png" />
+		    </h:outputLink>
+		 
+		    <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+		 
+		    <p:dialog header="Login" widgetVar="dlg" resizable="false">
+		        <h:panelGrid columns="2" cellpadding="5">
+		            <h:outputLabel for="username" value="Username:" />
+		            <p:inputText id="username" value="#{userController.user.login}" required="true" label="username" />
+		 
+		            <h:outputLabel for="password" value="Password:" />
+		            <p:password id="password" value="#{userController.user.password}" required="true" label="password" />
+		 
+		            <f:facet name="footer">
+		                <p:commandButton value="Login" update="growl" actionListener="#{userController.auth}"
+		                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+		            </f:facet> 
+		        </h:panelGrid>
+		    </p:dialog>
+		</h:form>
+		<h:link value="Register" outcome="register" /> 
+		<script type="text/javascript">
+		    function handleLoginRequest(xhr, status, args) {
+		        if(args.validationFailed || !args.loggedIn) {
+		            PF('dlg').jq.effect("shake", {times:5}, 100);
+		        }
+		    }
+		</script>
+	</p:outputPanel>
+	<p:outputPanel rendered="#{userController.loggedIn}" id="greetings">
+	   <h3>Greetings, <h:outputText value="#{userController.user.fio}"/></h3>
+	   <h:link value="Management page" outcome="index" rendered="#{userController.getRole() == 'admin'}"/>
+	   <h:form>  
+	       <h:commandButton id="logout" value="Logout"  action="#{userController.logout}"/>
+	   </h:form>
+	</p:outputPanel>
+</h:body>
+</html>
