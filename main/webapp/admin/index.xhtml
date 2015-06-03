@@ -32,7 +32,7 @@
                 <h:button outcome="save" value="Update">
                     <f:param name="userId" value="#{user.id}" />
                 </h:button>
-                <h:commandButton outcome="index" value="Delete" action="#{userController.delete(user)}"></h:commandButton>
+                <h:commandButton outcome="index" value="Delete" action="#{userController.delete(user)}" />
             </p:column>
         </p:dataTable>
     </h:form>

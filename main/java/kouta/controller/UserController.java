@@ -40,13 +40,24 @@ public class UserController implements Serializable {
     private Boolean loggedIn = false;
     private HashMap<Integer, String> roles;
 
+    public UserController() {
+        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext
+                .getCurrentInstance());
+        userService = ctx.getBean(UserService.class);
+        HashMap<Integer, String> roles = new HashMap<Integer, String>();
+        roles.put(0, "user");
+        roles.put(1, "admin");
+        this.roles = roles;
+    }
+
     public HashMap<Integer, String> getRoles() {
         return roles;
     }
 
     public User getManagedUser() {
         if (this.managedUser == null) {
-            String userId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userId");
+            String userId = FacesContext.getCurrentInstance().getExternalContext()
+                    .getRequestParameterMap().get("userId");
             if (userId != null) {
                 this.managedUser = this.userService.read(Integer.parseInt(userId));
                 this.managedUser.setIsNew(false);
@@ -54,7 +65,7 @@ public class UserController implements Serializable {
                 this.managedUser = new User();
             }
         }
-        
+
         return this.managedUser;
     }
 
@@ -64,7 +75,7 @@ public class UserController implements Serializable {
         } else {
             return this.roles.get(user.getRole());
         }
-        
+
     }
 
     public Boolean getLoggedIn() {
@@ -73,16 +84,6 @@ public class UserController implements Serializable {
 
     public void setLoggedIn(Boolean loggedIn) {
         this.loggedIn = loggedIn;
-    }
-
-    public UserController() {
-        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext
-                .getCurrentInstance());
-        userService = ctx.getBean(UserService.class);
-        HashMap<Integer, String> roles = new HashMap<Integer,String>();
-        roles.put(0, "user");
-        roles.put(1, "admin");
-        this.roles = roles;
     }
 
     public UserService getuserService() {
@@ -108,7 +109,7 @@ public class UserController implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
+
     public String save() {
         if (!managedUser.getNewPassword().isEmpty() || managedUser.getIsNew()) {
             managedUser.setPassword(this.getHash(managedUser.getNewPassword()));
@@ -123,13 +124,11 @@ public class UserController implements Serializable {
         user.setPassword(this.getHash(user.getPassword()));
         userService.save(user);
 
-        FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage("The User " + this.user.getFio()
-                        + " Is Registered Successfully"));
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage("The User " + this.user.getFio() + " Is Registered Successfully"));
         return "index?faces-redirect=true";
     }
-    
+
     public String delete(User user) {
         userService.remove(user);
         return "index?faces-redirect=true";
@@ -138,7 +137,8 @@ public class UserController implements Serializable {
     public void auth(ActionEvent event) {
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage message = null;
-        message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "login and password required");
+        message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error",
+                "login and password required");
         if (user.getLogin() != null && user.getPassword() != null) {
             User dbuser = userService.findByLogin(user.getLogin());
             message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "User not found");
@@ -149,14 +149,16 @@ public class UserController implements Serializable {
 
                 if (dbuser.getPassword().equals(this.getHash(user.getPassword()))) {
                     FacesContext facesContext = FacesContext.getCurrentInstance();
-                    HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+                    HttpSession session = (HttpSession) facesContext.getExternalContext()
+                            .getSession(true);
                     session.setAttribute("login", dbuser.getLogin());
                     session.setAttribute("fio", dbuser.getFio());
                     session.setAttribute("role", dbuser.getRole());
                     this.user = dbuser;
                     this.loggedIn = true;
                     try {
-                        FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+                        FacesContext.getCurrentInstance().getExternalContext()
+                                .redirect("index.xhtml");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -185,23 +187,24 @@ public class UserController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Internal error"));
         }
-        
+
         StringBuffer sb = new StringBuffer();
         for (byte b : input) {
             sb.append(String.format("%02x", b & 0xff));
         }
-        
+
         return sb.toString();
     }
-    
+
     public String logout() {
         FacesContext.getCurrentInstance().addMessage(null,
 
-              new FacesMessage("Goodbye, " + user.getFio()));
+        new FacesMessage("Goodbye, " + user.getFio()));
 
         user = null;
-        HttpSession httpSession = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+                .getExternalContext().getSession(false);
         httpSession.invalidate();
         return "index?faces-redirect=true";
-     }
+    }
 }

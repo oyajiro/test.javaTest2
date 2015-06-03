@@ -13,17 +13,17 @@ import kouta.model.User;
 
 @Component
 public class UserService {
-	@PersistenceContext
+    @PersistenceContext
     private EntityManager em;
- 
+
     public EntityManager getEm() {
         return em;
     }
- 
+
     public void setEm(EntityManager em) {
         this.em = em;
     }
- 
+
     @Transactional
     public void save(User user) {
         if (user.getIsNew()) {
@@ -34,34 +34,35 @@ public class UserService {
             this.em.merge(user);
         }
     }
-    
+
     @Transactional
     public User read(int id) {
-    	return this.em.find(User.class, id);
+        return this.em.find(User.class, id);
     }
-    
+
     @Transactional
     public void remove(User user) {
         User loadUser = this.em.find(User.class, user.getId());
         em.remove(loadUser);
     }
-    
+
     @Transactional
     public User findByLogin(String login) {
-        TypedQuery<User> query = em.createQuery("select u from User u where u.login = ?1", User.class);
+        TypedQuery<User> query = em.createQuery("select u from User u where u.login = ?1",
+                User.class);
 
         query.setParameter(1, login);
         query.setMaxResults(1);
         List<User> list = query.getResultList();
-        
+
         if (list == null || list.isEmpty()) {
             return null;
         }
 
         return list.get(0);
     }
-    
+
     public List<User> getAll() {
-    	return this.em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return this.em.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 }

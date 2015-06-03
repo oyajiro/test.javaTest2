@@ -1,10 +1,12 @@
 package kouta.controller;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -15,62 +17,86 @@ import org.springframework.web.jsf.FacesContextUtils;
 
 import kouta.service.BookService;
 import kouta.model.Book;
- 
+import kouta.controller.UserController;
+
 @ManagedBean
 @SessionScoped
 public class BookController implements Serializable {
- 
-	/**
+
+    /**
      * 
      */
     private static final long serialVersionUID = 8251481382599432437L;
     @Autowired
     private BookService bookService;
+    private HashMap<Integer, String> statuses;
+    @ManagedProperty(value="#{userController}")
+    private UserController userController;
 
     public BookController() {
-    	WebApplicationContext ctx =  FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-    	bookService = ctx.getBean(BookService.class);
-	}
+        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext
+                .getCurrentInstance());
+        bookService = ctx.getBean(BookService.class);
+
+        HashMap<Integer, String> statuses = new HashMap<Integer, String>();
+        statuses.put(0, "new");
+        statuses.put(1, "publish");
+        statuses.put(1, "decline");
+        this.statuses = statuses;
+    }
 
     private Book book = new Book();
- 
+
     public BookService getbookService() {
         return bookService;
     }
- 
+
     public void setbookService(BookService bookService) {
         this.bookService = bookService;
     }
- 
+
     public Book getBook() {
         return book;
     }
- 
+
     public void setBook(Book book) {
         this.book = book;
     }
- 
-    public void add() {
+
+    public String add() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         FacesMessage message = null;
-        message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Creating error", "Not enough rights");
+        message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Creating error",
+                "Not enough rights");
 
-        if (session.getAttribute("role") != null && (Integer)session.getAttribute("role") == 1) {
-            	// Calling Business Service
-                bookService.save(book);
-                // Add message
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "The Book " + this.book.getName() + " Is Registered Successfully");
+        if (session.getAttribute("role") != null && (Integer) session.getAttribute("role") == 1 && userController.getUser() != null) {
+            book.setStatus(0);
+            book.setUser(userController.getUser());
+            // Calling Business Service
+            bookService.save(book);
+            // Add message
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "The Book "
+                    + this.book.getName() + " Is Registered Successfully");
         }
         FacesContext.getCurrentInstance().addMessage(null, message);
+        return "index?faces-redirect=true";
     }
-    
+
+    public UserController getUserController() {
+        return userController;
+    }
+
+    public void setUserController(UserController userController) {
+        this.userController = userController;
+    }
+
     public List<Book> getBooks() {
         return bookService.getAll();
     }
-    
+
     public void delete(Book book) {
         bookService.remove(book);
     }
-    
+
 }
