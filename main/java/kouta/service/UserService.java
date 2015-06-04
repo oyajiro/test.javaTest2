@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import kouta.model.User;
+import kouta.entity.User;
 
 @Component
 public class UserService {
@@ -24,6 +24,10 @@ public class UserService {
         this.em = em;
     }
 
+    /**
+     * Save user, if user new, do persist. Otherwise do merge.
+     * @param user
+     */
     @Transactional
     public void save(User user) {
         if (user.getIsNew()) {

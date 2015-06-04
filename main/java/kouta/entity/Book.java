@@ -1,7 +1,7 @@
 /**
  * 
  */
-package kouta.model;
+package kouta.entity;
 
 import java.io.Serializable;
 
@@ -14,43 +14,32 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * @author user
- * 
+ * @author kouta
  */
 @Entity
 @Table(name = "books")
 public class Book implements Serializable {
-    /**
-     * 
-     */
     private static final long serialVersionUID = -5762575163852496747L;
 
     @Id
     @GeneratedValue
     private int id;
-    @Column(unique=true)
+    @Column(unique = true)
     private String name;
 
     @Column
     private int status = 0;
-    
+
     @OneToOne
-    @JoinColumn(name = "user_id") 
-    private User user;   
-    
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public Book() {
-    }
-
-    public Book(String name) {
-        this.name = name;
     }
 
     public User getUser() {

@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * @author kouta
+ *
+ */
 public class AdminFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -32,12 +36,10 @@ public class AdminFilter implements Filter {
     @Override
     public void destroy() {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void init(FilterConfig arg0) throws ServletException {
         // TODO Auto-generated method stub
-
     }
 }

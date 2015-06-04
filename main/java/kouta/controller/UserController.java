@@ -21,15 +21,12 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import kouta.service.UserService;
-import kouta.model.User;
+import kouta.entity.User;
 
 @ManagedBean
 @SessionScoped
 public class UserController implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2962757649900398635L;
 
     @Autowired

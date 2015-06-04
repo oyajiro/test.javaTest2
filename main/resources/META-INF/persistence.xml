@@ -6,8 +6,8 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<!-- Annotated entity classes -->
-        <class>kouta.model.Book</class>
-        <class>kouta.model.User</class>
+        <class>kouta.entity.Book</class>
+        <class>kouta.entity.User</class>
 		<properties>
 		 
 			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost/test" />
