@@ -15,14 +15,7 @@ import kouta.entity.Book;
 public class BookService {
     @PersistenceContext
     private EntityManager em;
-
-    public EntityManager getEm() {
-        return em;
-    }
-
-    public void setEm(EntityManager em) {
-        this.em = em;
-    }
+    private TypedQuery<Book> typedQuery;
 
     @Transactional
     public void save(Book book) {
@@ -39,17 +32,17 @@ public class BookService {
      * @return List of books for specified user
      */
     public List<Book> getAll(Integer userId) {
-        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.user.id = ?1",
+        typedQuery = em.createQuery("SELECT b FROM Book b WHERE b.user.id = ?1",
                 Book.class);
-        query.setParameter(1, userId);
-        return query.getResultList();
+        typedQuery.setParameter(1, userId);
+        return typedQuery.getResultList();
     }
 
     public List<Book> getListByStatus(Integer status) {
-        TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b WHERE b.status = ?1",
+        typedQuery = em.createQuery("SELECT b FROM Book b WHERE b.status = ?1",
                 Book.class);
-        query.setParameter(1, status);
-        return query.getResultList();
+        typedQuery.setParameter(1, status);
+        return typedQuery.getResultList();
     }
 
     @Transactional
@@ -65,5 +58,21 @@ public class BookService {
             book.setStatus(newStatus);
             em.merge(book);
         }
+    }
+    
+    public EntityManager getEm() {
+        return em;
+    }
+    
+    public TypedQuery<Book> getTypedQuery() {
+        return typedQuery;
+    }
+    
+    public void setTypedQuery(TypedQuery<Book> typedQuery) {
+        this.typedQuery = typedQuery;
+    }
+    
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 }

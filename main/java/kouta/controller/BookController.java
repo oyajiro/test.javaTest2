@@ -32,7 +32,6 @@ public class BookController implements Serializable {
     @ManagedProperty(value = "#{userController}")
     private UserController userController;
     private Book book = new Book();
-    
 
     public BookController() {
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext
@@ -44,30 +43,6 @@ public class BookController implements Serializable {
         statuses.put(1, "approve");
         statuses.put(1, "decline");
         this.statuses = statuses;
-    }
-
-    public String getStatus() {
-        return this.statuses.get(book.getStatus());
-    }
-
-    public String getStatus(Integer status) {
-        return this.statuses.get(status);
-    }
-
-    public BookService getbookService() {
-        return bookService;
-    }
-
-    public void setbookService(BookService bookService) {
-        this.bookService = bookService;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
     }
 
     public String add() {
@@ -102,14 +77,6 @@ public class BookController implements Serializable {
         bookService.changeStatus(bookId, 0);
     }
 
-    public UserController getUserController() {
-        return userController;
-    }
-
-    public void setUserController(UserController userController) {
-        this.userController = userController;
-    }
-
     public List<Book> getMyBooks() {
         return bookService.getAll(userController.getUser().getId());
     }
@@ -124,6 +91,38 @@ public class BookController implements Serializable {
 
     public void delete(Book book) {
         bookService.remove(book);
+    }
+
+    public String getStatus() {
+        return this.statuses.get(book.getStatus());
+    }
+
+    public String getStatus(Integer status) {
+        return this.statuses.get(status);
+    }
+
+    public BookService getbookService() {
+        return bookService;
+    }
+
+    public void setbookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public UserController getUserController() {
+        return userController;
+    }
+
+    public void setUserController(UserController userController) {
+        this.userController = userController;
     }
 
 }

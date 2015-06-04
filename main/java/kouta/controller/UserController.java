@@ -75,38 +75,6 @@ public class UserController implements Serializable {
 
     }
 
-    public Boolean getLoggedIn() {
-        return loggedIn;
-    }
-
-    public void setLoggedIn(Boolean loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-
-    public UserService getuserService() {
-        return userService;
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public List<User> getUsers() {
-        return userService.getAll();
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String save() {
         if (!managedUser.getNewPassword().isEmpty() || managedUser.getIsNew()) {
             managedUser.setPassword(this.getHash(managedUser.getNewPassword()));
@@ -203,5 +171,37 @@ public class UserController implements Serializable {
                 .getExternalContext().getSession(false);
         httpSession.invalidate();
         return "index?faces-redirect=true";
+    }
+
+    public Boolean getLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public UserService getuserService() {
+        return userService;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public List<User> getUsers() {
+        return userService.getAll();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

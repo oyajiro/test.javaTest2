@@ -15,14 +15,7 @@ import kouta.entity.User;
 public class UserService {
     @PersistenceContext
     private EntityManager em;
-
-    public EntityManager getEm() {
-        return em;
-    }
-
-    public void setEm(EntityManager em) {
-        this.em = em;
-    }
+    private TypedQuery<User> typedQuery;
 
     /**
      * Save user, if user new, do persist. Otherwise do merge.
@@ -52,12 +45,12 @@ public class UserService {
 
     @Transactional
     public User findByLogin(String login) {
-        TypedQuery<User> query = em.createQuery("select u from User u where u.login = ?1",
+        typedQuery = em.createQuery("select u from User u where u.login = ?1",
                 User.class);
 
-        query.setParameter(1, login);
-        query.setMaxResults(1);
-        List<User> list = query.getResultList();
+        typedQuery.setParameter(1, login);
+        typedQuery.setMaxResults(1);
+        List<User> list = typedQuery.getResultList();
 
         if (list == null || list.isEmpty()) {
             return null;
@@ -68,5 +61,21 @@ public class UserService {
 
     public List<User> getAll() {
         return this.em.createQuery("SELECT u FROM User u", User.class).getResultList();
+    }
+    
+    public EntityManager getEm() {
+        return em;
+    }
+    
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    
+    public TypedQuery<User> getTypedQuery() {
+        return typedQuery;
+    }
+    
+    public void setTypedQuery(TypedQuery<User> typedQuery) {
+        this.typedQuery = typedQuery;
     }
 }
